@@ -21,15 +21,22 @@ const registers = {
   CTRL_REG5: 0x2E
 };
 
+const ctrlReg2Cmds = {
+  RST: 0x40,
+  HI_RES: 0x02
+};
+
 const RANGE_4G = 0b01; // +/- 4g.  Must be this if using low noise
+const DEVICE_ID = 0x1A;
+
 
 module.exports.registers = registers;
 module.exports.i2cAddress = i2cAddress;
+module.exports.ctrlReg2Cmds = ctrlReg2Cmds;
 
 module.exports.MMA8541 = class MMA8541 {
   constructor(i2cAddress) {
     this.i2cAddress = i2cAddress || i2cAddress.DEFAULT_ADDRESS;
-    this.deviceId = 0x0;
     this.i2cBus = i2c.openSync(1);
   }
 
@@ -52,7 +59,24 @@ module.exports.MMA8541 = class MMA8541 {
   }
 
   async init() {
-    this.deviceId = await this._readRegister(registers.WHOAMI);
-    console.log(Buffer.from(this.deviceId).toString('hex'));
+    if (DEVICE_ID != await this._readRegister(registers.WHOAMI)) {
+      throw new Error('Could not detect MMA8451');
+    }
+
+    await this._writeRegister(registers.CTRL_REG2, ctrlReg2Cmds.RST); //reset the sensor
+    while (await this._readRegister(registers.CTRL_REG2) & ctrlReg2Cmds.RST); //wait til its ready
+
+    await this._writeRegister(registers.CTRL_REG2, ctrlReg2Cmds.HIGH_RES); //high resoultion
+
+    // Data ready inturrupt enabled on INT1 (Interrupt is routed to INT1 pin)
+    await this._writeRegister(registers.CTRL_REG4, 0x01);
+    await this._writeRegister(registers.CTRL_REG5, 0x01);
+
+    // Enable orientation config
+    await this._writeRegister(registers.PL_CFG, 0x40);
+
+    // Activate at max rate, low noise mode. Requires 4G mode
+    await this._writeRegister(registers.XYZ_DATA_CFG, RANGE_4G);
+    await this._writeRegister(registers.CTRL_REG1, 0x01 | 0x04);
   }
 };
