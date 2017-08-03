@@ -1,0 +1,29 @@
+{
+  "name": "node-adafruit-mma8541",
+  "version": "1.0.0",
+  "description": "Node i2c module for the Adafruit MMA8451 Accelerometer sensor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rynop/node-adafruit-mma8541.git"
+  },
+  "keywords": [
+    "adafruit",
+    "MMA8451",
+    "accelerometer",
+    "sensor",
+    "i2c"
+  ],
+  "author": "ryan.pendergast@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rynop/node-adafruit-mma8541/issues"
+  },
+  "homepage": "https://github.com/rynop/node-adafruit-mma8541#readme",
+  "dependencies": {
+    "i2c-bus": "^~1.2.2"
+  }
+}
