@@ -34,16 +34,16 @@ module.exports.MMA8541 = class MMA8541 {
     this.deviceId = 0x0;
   }
 
-  async _readRegister(reg) {
+  _readRegister(reg) {
     // await writeByte(this.i2cAddress, reg, 0);
-    return await readByte(this.i2cAddress, reg);
+    return readByte(this.i2cAddress, reg);
   }
 
-  async _writeRegister(reg, byte) {
-    return await writeByte(this.i2cAddress, reg, byte);
+  _writeRegister(reg, byte) {
+    return writeByte(this.i2cAddress, reg, byte);
   }
 
-  init() {
+  async init() {
     this.deviceId = await _readRegister(registers.WHOAMI);
     console.log(this.deviceId);
   }
