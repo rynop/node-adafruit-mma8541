@@ -53,6 +53,6 @@ module.exports.MMA8541 = class MMA8541 {
 
   async init() {
     this.deviceId = await this._readRegister(registers.WHOAMI);
-    console.log(this.deviceId);
+    console.log(Buffer(this.deviceId).toString('hex'));
   }
 };
