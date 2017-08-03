@@ -23,7 +23,7 @@ const registers = {
   CTRL_REG5: 0x2E
 };
 
-const 4 G_RANGE = 0b01; // +/- 4g.  Must be this if using low noise
+const RANGE_4G = 0b01; // +/- 4g.  Must be this if using low noise
 
 module.exports.registers = registers;
 module.exports.i2cAddress = i2cAddress;
