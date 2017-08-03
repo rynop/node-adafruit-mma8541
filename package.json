@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/rynop/node-adafruit-mma8541#readme",
   "dependencies": {
-    "i2c-bus": "^~1.2.2"
+    "i2c-bus": "~1.2.2"
   }
 }
