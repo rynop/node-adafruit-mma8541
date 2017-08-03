@@ -1,9 +1,7 @@
 'use strict';
 
 const i2c = require('i2c-bus'),
-  util = require('util'),
-  writeByte = util.promisify(i2c.writeByte),
-  readByte = util.promisify(i2c.readByte);
+  util = require('util');
 
 const i2cAddress = {
   DEFAULT_ADDRESS: 0x1D,
@@ -32,15 +30,25 @@ module.exports.MMA8541 = class MMA8541 {
   constructor(i2cAddress) {
     this.i2cAddress = i2cAddress || i2cAddress.DEFAULT_ADDRESS;
     this.deviceId = 0x0;
+    this.i2cBus = i2c.openSync(1);
   }
 
   _readRegister(reg) {
-    // await writeByte(this.i2cAddress, reg, 0);
-    return readByte(this.i2cAddress, reg);
+    return new Promise((resolve, reject) => {
+      this.i2cBus.readByte(this.i2cAddress, reg, (err, byte) => {
+        if (err) return reject(err);
+        return resolve(byte);
+      })
+    });
   }
 
   _writeRegister(reg, byte) {
-    return writeByte(this.i2cAddress, reg, byte);
+    return new Promise((resolve, reject) => {
+      this.i2cBus.readByte(this.i2cAddress, reg, byte, (err) => {
+        if (err) return reject(err);
+        return true;
+      })
+    });
   }
 
   async init() {
