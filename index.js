@@ -104,12 +104,12 @@ module.exports.MMA8541 = class MMA8541 {
       y = int16(buffer[3], buffer[2]),
       z = int16(buffer[5], buffer[4]);
 
-    resolve({
+    return {
       x: gForce ? x / 2048 : x,
       y: gForce ? y / 2048 : y,
       z: gForce ? z / 2048 : z,
       units: gForce ? 'g' : 'm/s²'
-    });
+    };
   }
 
   async getOrientation() {
