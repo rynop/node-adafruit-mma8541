@@ -63,20 +63,20 @@ module.exports.MMA8541 = class MMA8541 {
       throw new Error('Could not detect MMA8451');
     }
 
-    await this._writeRegister(registers.CTRL_REG2, ctrlReg2Cmds.RST); //reset the sensor
-    while (await this._readRegister(registers.CTRL_REG2) & ctrlReg2Cmds.RST); //wait til its ready
-
-    await this._writeRegister(registers.CTRL_REG2, ctrlReg2Cmds.HIGH_RES); //high resoultion
-
-    // Data ready inturrupt enabled on INT1 (Interrupt is routed to INT1 pin)
-    await this._writeRegister(registers.CTRL_REG4, 0x01);
-    await this._writeRegister(registers.CTRL_REG5, 0x01);
-
-    // Enable orientation config
-    await this._writeRegister(registers.PL_CFG, 0x40);
-
-    // Activate at max rate, low noise mode. Requires 4G mode
-    await this._writeRegister(registers.XYZ_DATA_CFG, RANGE_4G);
-    await this._writeRegister(registers.CTRL_REG1, 0x01 | 0x04);
+    // await this._writeRegister(registers.CTRL_REG2, ctrlReg2Cmds.RST); //reset the sensor
+    // while (await this._readRegister(registers.CTRL_REG2) & ctrlReg2Cmds.RST); //wait til its ready
+    //
+    // await this._writeRegister(registers.CTRL_REG2, ctrlReg2Cmds.HIGH_RES); //high resoultion
+    //
+    // // Data ready inturrupt enabled on INT1 (Interrupt is routed to INT1 pin)
+    // await this._writeRegister(registers.CTRL_REG4, 0x01);
+    // await this._writeRegister(registers.CTRL_REG5, 0x01);
+    //
+    // // Enable orientation config
+    // await this._writeRegister(registers.PL_CFG, 0x40);
+    //
+    // // Activate at max rate, low noise mode. Requires 4G mode
+    // await this._writeRegister(registers.XYZ_DATA_CFG, RANGE_4G);
+    // await this._writeRegister(registers.CTRL_REG1, 0x01 | 0x04);
   }
 };
