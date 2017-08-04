@@ -27,6 +27,7 @@ const ctrlReg2Cmds = {
 };
 
 const RANGE_4G = 0b01; // +/- 4g.  Must be this if using low noise
+const DEVICE_ID = 0x1A;
 
 module.exports.registers = registers;
 module.exports.i2cAddress = i2cAddress;
@@ -35,7 +36,6 @@ module.exports.ctrlReg2Cmds = ctrlReg2Cmds;
 module.exports.MMA8541 = class MMA8541 {
   constructor(i2cAddress) {
     this.i2cAddress = i2cAddress || i2cAddress.DEFAULT_ADDRESS;
-    this.deviceId = 0x0;
     this.i2cBus = i2c.openSync(1);
   }
 
@@ -58,7 +58,9 @@ module.exports.MMA8541 = class MMA8541 {
   }
 
   async init() {
-    this.deviceId = await this._readRegister(registers.WHOAMI);
-    console.log(this.deviceId);
+    const id = await this._readRegister(registers.WHOAMI);
+    if (DEVICE_ID != id) {
+      throw new Error('Could not detect MMA8451');
+    }
   }
 };
