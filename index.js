@@ -59,7 +59,7 @@ module.exports.MMA8541 = class MMA8541 {
 
   async init() {
     const id = await this._readRegister(registers.WHOAMI);
-    if (DEVICE_ID != id) {
+    if (DEVICE_ID !== id) {
       throw new Error('Could not detect MMA8451');
     }
 
