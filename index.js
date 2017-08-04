@@ -50,7 +50,7 @@ module.exports.MMA8541 = class MMA8541 {
 
   _writeRegister(reg, byte) {
     return new Promise((resolve, reject) => {
-      this.i2cBus.readByte(this.i2cAddress, reg, byte, (err) => {
+      this.i2cBus.writeByte(this.i2cAddress, reg, byte, (err) => {
         if (err) return reject(err);
         return true;
       })
