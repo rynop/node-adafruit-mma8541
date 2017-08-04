@@ -29,11 +29,11 @@ const ctrlReg2Cmds = {
 const RANGE_4G = 0b01; // +/- 4g.  Must be this if using low noise
 const DEVICE_ID = 0x1A;
 
-uint16(msb, lsb) {
+function uint16(msb, lsb) {
   return msb << 8 | lsb;
 }
 
-int16(msb, lsb) {
+function int16(msb, lsb) {
   const val = uint16(msb, lsb);
   return val > 32767 ? (val - 65536) : val;
 }
