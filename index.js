@@ -23,7 +23,7 @@ const registers = {
 
 const ctrlReg2Cmds = {
   RST: 0x40,
-  HI_RES: 0x02
+  HIGH_RES: 0x02
 };
 
 const RANGE_4G = 0b01; // +/- 4g.  Must be this if using low noise
@@ -96,24 +96,24 @@ module.exports.MMA8541 = class MMA8541 {
     await this._writeRegister(registers.CTRL_REG1, 0x01 | 0x04);
   }
 
-  // async getAcceleration(gForce) { //Default is m/s²
-  //   await this._writeRegister(registers.OUT_X_MSB, 0);
-  //   const buffer = this._readBlock(registers.OUT_X_MSB);
-  //
-  //   const x = int16(buffer[1], buffer[0]),
-  //     y = int16(buffer[3], buffer[2]),
-  //     z = int16(buffer[5], buffer[4]);
-  //
-  //   resolve({
-  //     x: gForce ? x / 2048 : x,
-  //     y: gForce ? y / 2048 : y,
-  //     z: gForce ? z / 2048 : z,
-  //     units: gForce ? 'g' : 'm/s²'
-  //   });
-  // }
-  //
-  // async getOrientation() {
-  //   const o = await this._readRegister(registers.PL_STATUS) & 0x07;
-  //   return o;
-  // }
+  async getAcceleration(gForce) { //Default is m/s²
+    await this._writeRegister(registers.OUT_X_MSB, 0);
+    const buffer = this._readBlock(registers.OUT_X_MSB);
+
+    const x = int16(buffer[1], buffer[0]),
+      y = int16(buffer[3], buffer[2]),
+      z = int16(buffer[5], buffer[4]);
+
+    resolve({
+      x: gForce ? x / 2048 : x,
+      y: gForce ? y / 2048 : y,
+      z: gForce ? z / 2048 : z,
+      units: gForce ? 'g' : 'm/s²'
+    });
+  }
+
+  async getOrientation() {
+    const o = await this._readRegister(registers.PL_STATUS) & 0x07;
+    return o;
+  }
 };
