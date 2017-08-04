@@ -98,7 +98,7 @@ module.exports.MMA8541 = class MMA8541 {
 
   async getAcceleration(gForce) { //Default is m/s²
     await this._writeRegister(registers.OUT_X_MSB, 0);
-    const buffer = this._readBlock(registers.OUT_X_MSB);
+    const buffer = await this._readBlock(registers.OUT_X_MSB);
 
     console.log('buffer', buffer);
 
