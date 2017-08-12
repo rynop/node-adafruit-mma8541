@@ -10,11 +10,21 @@ const i2cAddress = {
 
 const registers = {
   OUT_X_MSB: 0x01,
+  OUT_X_LSB: 0x02,
+  OUT_Y_MSB: 0x03,
+  OUT_Y_LSB: 0x04,
+  OUT_Z_MSB: 0x05,
+  OUT_Z_LSB: 0x06,
+  F_SETUP: 0x09,
   SYSMOD: 0x0B,
   WHOAMI: 0x0D,
   XYZ_DATA_CFG: 0x0E,
   PL_STATUS: 0x10,
   PL_CFG: 0x11,
+  FF_MT_CFG: 0x15,
+  FF_MT_SRC: 0x16,
+  FF_MT_THS: 0x17,
+  FF_MT_COUNT: 0x18,
   CTRL_REG1: 0x2A,
   CTRL_REG2: 0x2B,
   CTRL_REG4: 0x2D,
@@ -29,13 +39,13 @@ const ctrlReg2Cmds = {
 const RANGE_4G = 0b01; // +/- 4g.  Must be this if using low noise
 const DEVICE_ID = 0x1A;
 
-function uint16(msb, lsb) {
-  return msb << 8 | lsb;
+function uint14(msb, lsb) {
+  return (msb << 6) | (lsb >> 2);
 }
 
-function int16(msb, lsb) {
-  const val = uint16(msb, lsb);
-  return val > 32767 ? (val - 65536) : val;
+function int14(msb, lsb) {
+  const val = uint14(msb, lsb);
+  return val > 8191 ? (val - 16384) : val;
 }
 
 module.exports.registers = registers;
@@ -82,6 +92,8 @@ module.exports.MMA8541 = class MMA8541 {
     await this._writeRegister(registers.CTRL_REG2, ctrlReg2Cmds.RST);
     while (await this._readRegister(registers.CTRL_REG2) & ctrlReg2Cmds.RST);
 
+    await this._writeRegister(registers.F_SETUP, 0x00); // Disable FIFO & FIFO Watermark
+
     await this._writeRegister(registers.CTRL_REG2, ctrlReg2Cmds.HIGH_RES); //high resoultion
 
     // Data ready inturrupt enabled on INT1 (Interrupt is routed to INT1 pin)
@@ -102,14 +114,14 @@ module.exports.MMA8541 = class MMA8541 {
 
     console.log('buffer', buffer);
 
-    const x = int16(buffer[1], buffer[0]),
-      y = int16(buffer[3], buffer[2]),
-      z = int16(buffer[5], buffer[4]);
+    const x = int14(buffer[0], buffer[1]),
+      y = int14(buffer[2], buffer[3]),
+      z = int14(buffer[4], buffer[5]);
 
     return {
-      x: gForce ? x / 2048 : x,
-      y: gForce ? y / 2048 : y,
-      z: gForce ? z / 2048 : z,
+      x: gForce ? x / 2048 : x * 9.80655 / 2048,
+      y: gForce ? y / 2048 : y * 9.80655 / 2048,
+      z: gForce ? z / 2048 : z * 9.80655 / 2048,
       units: gForce ? 'g' : 'm/s²'
     };
   }
