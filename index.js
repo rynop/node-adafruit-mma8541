@@ -112,8 +112,6 @@ module.exports.MMA8541 = class MMA8541 {
     await this._writeRegister(registers.OUT_X_MSB, 0);
     const buffer = await this._readBlock(registers.OUT_X_MSB);
 
-    console.log('buffer', buffer);
-
     const x = int14(buffer[0], buffer[1]),
       y = int14(buffer[2], buffer[3]),
       z = int14(buffer[4], buffer[5]);
