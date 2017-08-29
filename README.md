@@ -1,6 +1,6 @@
 # Adafruit-MMA8541
 
-Node i2c module for the Adafruit MMA8451 Accelerometer sensor
+Node I²C module for the Adafruit MMA8451 Accelerometer sensor
 
 ## Requirements
 
