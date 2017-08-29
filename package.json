@@ -4,7 +4,7 @@
   "description": "Node i2c module for the Adafruit MMA8451 Accelerometer sensor",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tests/inde.js"
   },
   "repository": {
     "type": "git",
